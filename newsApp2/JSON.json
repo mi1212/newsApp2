@@ -1,0 +1,50 @@
+{
+    "status":"success",
+    "totalResults":5409,
+    "results":
+    [
+        {
+            "title":"Stian Gregersen convoquГ© avec la NorvГЁge face Г  la SlovГ©nie et la Serbie",
+            "link":"https://www.girondins33.com/Actualites/stian-gregersen-convoque-avec-la-norvege-face-a-la-slovenie-et-la-serbie/54837",
+            "keywords":["SГ©lections"],
+            "creator":["Julien"],
+            "video_url":null,
+            "description":"Suspendu Г  Saint-Г‰tienne et convaincant depuis le dГ©but de saison, Stian Gregersen retrouvera le plaisir de la sГ©lection lors de la prochaine trГЄve. Le dГ©fenseur bordelais a en effet Г©tГ© appelГ© en vue des matchs face Г  la SlovГ©nie et la Serbie qui se joueront les 24 et 27 septembre prochains.",
+            "content":null,
+            "pubDate":"2022-09-12 12:23:20",
+            "image_url":"https://www.girondins33.com/storage/breves/stian-gregersen-3-sc.jpg",
+            "source_id":"girondins33",
+            "country":["france"],
+            "category":["sports"],
+            "language":"french"
+        },
+        {
+            "title":"Nouvelle-CalГ©donie: pas de rГ©fГ©rendum sur le futur cadre juridique mi-2023",
+            "link":"https://fr.sputniknews.africa/20220912/nouvelle-caledonie-pas-de-referendum-sur-le-futur-cadre-juridique-mi-2023-1056155416.html",
+            "keywords":null,
+            "creator":null,
+            "video_url":null,
+            "description":"MalgrГ© les promesses de l'ancien ministre des Outre-Mer, il n'y aura pas de \"rГ©fГ©rendum de projet\" mi-2023 afin de valider un nouveau cadre juridique de la Nouvelle-CalГ©donie, a dГ©clarГ© le ministre dГ©lГ©guГ© actuel Jean-FranГ§ois Carenco.","content":null,
+            "pubDate":"2022-09-12 12:21:19",
+            "image_url":null,
+            "source_id":"sputniknews",
+            "country":["france"],
+            "category":["top"],
+            "language":"french"
+        },
+        {
+            "title":"ASSE : Wadji a trouvГ© le partenaire idГ©al chez les Verts",
+            "link":"https://www.butfootballclub.fr/asse/actualite/asse-wadji-a-trouve-le-partenaire-ideal-chez-les-verts-788194",
+            "keywords":null,
+            "creator":null,
+            "video_url":null,
+            "description":"Buteur en faveur de lвЂ™AS Saint-Г‰tienne samedi Г  Geoffroy-Guichard face aux Girondins de Bordeaux (2-0), Ibrahima Wadji (27 ans) sвЂ™entend parfaitement avec un certain Jean-Philippe Krasso.",
+            "content":null,"pubDate":"2022-09-12 12:20:00",
+            "image_url":"https://static.butfootballclub.fr/16/2022/09/photo_article/788194/311639/1200-L-asse-wadji-a-trouv-le-partenaire-idal-chez-les-verts.jpg",
+            "source_id":"butfootballclub",
+            "country":["france"],
+            "category":["sports"],
+            "language":"french"
+        },
+    ],
+    "nextPage":1}
