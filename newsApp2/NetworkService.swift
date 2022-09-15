@@ -51,6 +51,20 @@ class NetworkService {
         components.queryItems = params.map {URLQueryItem(name: $0, value: $1)}
         return components.url!
     }
+    
+    //
+    
+    func requestSourceNews(_ id: String, completion: @escaping (Data?, Error?) -> Void) {
+        var parametrs = [String: String]()
+        parametrs["category"] = id
+        let url = self.url(params: parametrs)
+        var request = URLRequest(url: url)
+        request.allHTTPHeaderFields = prepareHeader()
+        request.httpMethod = "get"
+        let task = createDataTask(from: request, completion: completion)
+        print(request.description)
+        task.resume()
+    }
 
 private func createDataTask(from request: URLRequest, completion: @escaping (Data?, Error?) -> Void) -> URLSessionDataTask {
     return URLSession.shared.dataTask(with: request) { data, response, error in

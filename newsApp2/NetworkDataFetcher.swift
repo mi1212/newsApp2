@@ -27,6 +27,21 @@ class NetworkDataFetcher {
         }
     }
     
+    func fetchSourceNews (id: String, completion: @escaping (SearchResults?) -> ()) {
+        networkService.requestSourceNews(id) { (data, error) in
+            
+            if let error = error {
+                print("Error received requesting data: \(error.localizedDescription )")
+                completion(nil)
+            }
+                        
+            let decode = self.decodeJSON(type: SearchResults.self, from: data)
+            
+        
+            completion(decode)
+        }
+    }
+    
     // парсинг
     
     func decodeJSON<T: Decodable> (type: T.Type, from: Data?) -> T? {
