@@ -12,7 +12,7 @@ class NewsTableViewCell: UITableViewCell {
     
     var timer: Timer?
     
-    private let photoImageView: UIImageView = {
+    let photoImageView: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
 //        image.backgroundColor = .green
@@ -26,7 +26,8 @@ class NewsTableViewCell: UITableViewCell {
         didSet {
             let photoUrl = result.image_url
             guard let imageUrl = photoUrl, let url = URL(string: imageUrl) else {
-                photoImageView.image = UIImage(named: "withoutImage")
+                photoImageView.image = UIImage(named: "no image")
+                photoImageView.layer.opacity = 0.4
                 return
             }
             photoImageView.sd_setImage(with: url)
@@ -37,7 +38,7 @@ class NewsTableViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.font = UIFont.preferredFont(forTextStyle: .headline)
         label.text = ""
         return label
     }()
@@ -45,7 +46,7 @@ class NewsTableViewCell: UITableViewCell {
     private let sourceView: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 10, weight: .light)
+        label.font = UIFont.preferredFont(forTextStyle: .footnote)
         label.text = ""
         return label
     }()
@@ -54,7 +55,7 @@ class NewsTableViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.font = UIFont.systemFont(ofSize: 10, weight: .light)
+        label.font = UIFont.preferredFont(forTextStyle: .footnote)
         label.text = ""
         return label
     }()

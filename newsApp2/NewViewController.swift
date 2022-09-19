@@ -11,6 +11,8 @@ class NewViewController: UIViewController {
     
     var aspectRatio: CGFloat = 0.1
     
+    var linkUrl: String = ""
+    
     private lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
@@ -27,61 +29,99 @@ class NewViewController: UIViewController {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleAspectFit
+        image.layer.cornerRadius = 12
+        image.clipsToBounds = true
         return image
     }()
     
     var result : Result! {
         didSet {
             let photoUrl = result.image_url
-            
-            guard let imageUrl = photoUrl, let url = URL(string: imageUrl) else {
-                photoImageView.image = UIImage(named: "withoutImage")
-                aspectRatio = 1
-                return
+
+                guard let imageUrl = photoUrl, let url = URL(string: imageUrl) else {
+                    photoImageView.image = UIImage(named: "no image")
+                    photoImageView.layer.opacity = 0.4
+                    aspectRatio = 0.5
+                    return
             }
             photoImageView.sd_setImage(with: url)
             aspectRatio = CGFloat(Float((photoImageView.image?.size.height) ?? 0.1)/Float((photoImageView.image?.size.width) ?? 1))
-            print(aspectRatio)
         }
     }
-    
-    private let nameView: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "name: "
-        return label
-    }()
 
     private let titleView: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        label.text = ""
+        label.font = UIFont.preferredFont(forTextStyle: .headline)
+        label.text = "title: "
         return label
     }()
     
     private let descriptionView: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 10, weight: .light)
+        label.font = UIFont.preferredFont(forTextStyle: .footnote)
         label.numberOfLines = 0
-        label.text = ""
+        label.text = "description: "
         return label
+    }()
+    
+    private let videoUrlView: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.preferredFont(forTextStyle: .footnote)
+        label.numberOfLines = 0
+        label.text = "video_url: "
+        return label
+    }()
+    
+    private let sourceIdView: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.preferredFont(forTextStyle: .footnote)
+        label.numberOfLines = 0
+        label.text = "source_id: "
+        return label
+    }()
+    
+    private let contentNewView: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.preferredFont(forTextStyle: .footnote)
+        label.numberOfLines = 0
+        label.text = "content: "
+        return label
+    }()
+    
+    private let languageView: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.preferredFont(forTextStyle: .footnote)
+        label.numberOfLines = 0
+        label.text = "language: "
+        return label
+    }()
+    
+    private let linkView: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+//        button.setTitle(linkUrl, for: .normal)
+        button.setTitleColor(.link, for: .normal)
+        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .footnote)
+        button.titleLabel?.textAlignment = .left
+//        label.font = UIFont.preferredFont(forTextStyle: .footnote)
+//        label.numberOfLines = 0
+//        label.text = "link: "
+        button.addTarget(self, action: #selector(linkOpen), for: .touchUpInside)
+        return button
     }()
     
     private let dateView: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 10, weight: .light)
+        label.font = UIFont.preferredFont(forTextStyle: .footnote)
         label.layer.opacity = 0.8
-        label.numberOfLines = 0
-        return label
-    }()
-    
-    private let descriptionViewLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         return label
     }()
@@ -96,13 +136,17 @@ class NewViewController: UIViewController {
         self.view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(photoImageView)
-//        contentView.addSubview(nameView)
         contentView.addSubview(titleView)
-        contentView.addSubview(descriptionViewLabel)
-        contentView.addSubview(dateView)
 //        contentView.addSubview(descriptionView)
+        contentView.addSubview(videoUrlView)
+        contentView.addSubview(sourceIdView)
+        contentView.addSubview(contentNewView)
+//        contentView.addSubview(languageView)
+        contentView.addSubview(linkView)
+        linkView.setTitle(linkUrl, for: .normal)
+        contentView.addSubview(dateView)
         
-        let inset: CGFloat = 5
+        let inset: CGFloat = 15
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -134,43 +178,62 @@ class NewViewController: UIViewController {
         ])
 
         NSLayoutConstraint.activate([
-            descriptionViewLabel.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: inset),
-            descriptionViewLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
-            descriptionViewLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
+            contentNewView.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: inset),
+            contentNewView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
+            contentNewView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
         ])
         
         NSLayoutConstraint.activate([
-            dateView.topAnchor.constraint(equalTo: descriptionViewLabel.bottomAnchor, constant: inset),
-//            dateView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
+            videoUrlView.topAnchor.constraint(equalTo: contentNewView.bottomAnchor, constant: inset),
+            videoUrlView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
+            videoUrlView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
+        ])
+        
+        NSLayoutConstraint.activate([
+            linkView.topAnchor.constraint(equalTo: videoUrlView.bottomAnchor, constant: inset),
+            linkView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
+            linkView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
+        ])
+        
+        NSLayoutConstraint.activate([
+            sourceIdView.topAnchor.constraint(equalTo: linkView.bottomAnchor, constant: inset),
+            sourceIdView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
+            sourceIdView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
+            sourceIdView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -50),
+            sourceIdView.heightAnchor.constraint(equalToConstant: 40),
+        ])
+
+        NSLayoutConstraint.activate([
+            dateView.topAnchor.constraint(equalTo: linkView.bottomAnchor, constant: inset),
             dateView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
-            dateView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -50)
+            dateView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -50),
+            dateView.heightAnchor.constraint(equalToConstant: 40),
         ])
     }
 
     public func setupViewController(result: Result) {
         self.result = result
-//        self.sourceView.text! = article.source.name
-        self.titleView.text! = result.title ?? ""
-        self.descriptionViewLabel.text = result.description
-        
-//        if let date = article.publishedAt {
-//            let formatter1 = DateFormatter()
-//            formatter1.dateStyle = .short
-//            formatter1.timeStyle = .short
-//            self.dateView.text = formatter1.string(from: date)
-//        }
-        
-        
-    }
+        self.titleView.text! = result.title ?? " - "
+        self.descriptionView.text = result.description
+        self.videoUrlView.text! += result.video_url ?? " - "
+        self.sourceIdView.text! += result.source_id ?? " - "
+        self.contentNewView.text! = (result.content ?? result.description) ?? "-"
+//        self.languageView.text! += result.language ?? " - "
+        linkUrl += result.link ?? " - "
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if let date = result.pubDate {
+            let formatter1 = DateFormatter()
+            formatter1.dateStyle = .short
+            formatter1.timeStyle = .short
+            self.dateView.text = formatter1.string(from: date)
+        }
+ 
     }
-    */
+    
+    @objc func linkOpen() {
+        guard let url = URL(string: linkUrl) else { return }
+        print(url)
+        UIApplication.shared.open(url)
+    }
 
 }

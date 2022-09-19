@@ -48,3 +48,23 @@
         },
     ],
     "nextPage":1}
+
+
+{"status":"success"
+    ,"totalResults":2755,
+    "results":[
+        {"title":"Р’ РўР°РґР¶РёРєРёСЃС‚Р°РЅРµ РїРѕРґС‚РІРµСЂРґРёР»Рё РіРёР±РµР»СЊ 41 С‡РµР»РѕРІРµРєР° РІ С…РѕРґРµ РєРѕРЅС„Р»РёРєС‚Р° РЅР° РіСЂР°РЅРёС†Рµ СЃ РљРёСЂРіРёР·РёРµР№",
+            "link":"https://russian.rt.com/ussr/news/1050562-tadzhikistan-gibel-granica-kirgiziya?utm_source=rss&utm_medium=rss&utm_campaign=RSS",
+            "keywords":null,
+            "creator":["RT РЅР° СЂСѓСЃСЃРєРѕРј"],
+            "video_url":null,
+            "description":"Р’ СЂРµР·СѓР»СЊС‚Р°С‚Рµ РєРѕРЅС„Р»РёРєС‚Р° РЅР° РіСЂР°РЅРёС†Рµ СЃ РљРёСЂРіРёР·РёРµР№ РІ РїРѕРіРёР± 41 РіСЂР°Р¶РґР°РЅРёРЅ РўР°РґР¶РёРєРёСЃС‚Р°РЅР°. РћР± СЌС‚РѕРј СЃРѕРѕР±С‰РёР» Р·Р°РјРіР»Р°РІС‹ С‚Р°РґР¶РёРєСЃРєРѕРіРѕ РњРР” РЎРѕРґРёРє РРјРѕРјРё. Р§РёС‚Р°С‚СЊ РґР°Р»РµРµ",
+            "content":null,
+            "pubDate":"2022-09-19 11:48:52",
+            "image_url":"https://cdni.rt.com/russian/images/2022.09/thumbnail/63285760ae5ac96aab53da36.png",
+            "source_id":"rt_ru",
+            "country":["russia"],
+            "category":["top"],
+            "language":"russian"
+        }
+    ],"nextPage":2}
