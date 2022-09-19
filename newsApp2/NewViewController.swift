@@ -6,12 +6,15 @@
 //
 
 import UIKit
+import WebKit
 
 class NewViewController: UIViewController {
     
     var aspectRatio: CGFloat = 0.1
     
     var linkUrl: String = ""
+    
+    var webView: WKWebView!
     
     private lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
@@ -106,13 +109,10 @@ class NewViewController: UIViewController {
     private let linkView: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-//        button.setTitle(linkUrl, for: .normal)
+        button.titleLabel?.textAlignment = .natural
         button.setTitleColor(.link, for: .normal)
         button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .footnote)
         button.titleLabel?.textAlignment = .left
-//        label.font = UIFont.preferredFont(forTextStyle: .footnote)
-//        label.numberOfLines = 0
-//        label.text = "link: "
         button.addTarget(self, action: #selector(linkOpen), for: .touchUpInside)
         return button
     }()
@@ -132,16 +132,16 @@ class NewViewController: UIViewController {
         self.view.backgroundColor = .white
     }
     
+    
+    
     private func setupViewController() {
         self.view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(photoImageView)
         contentView.addSubview(titleView)
-//        contentView.addSubview(descriptionView)
         contentView.addSubview(videoUrlView)
         contentView.addSubview(sourceIdView)
         contentView.addSubview(contentNewView)
-//        contentView.addSubview(languageView)
         contentView.addSubview(linkView)
         linkView.setTitle(linkUrl, for: .normal)
         contentView.addSubview(dateView)
@@ -232,8 +232,8 @@ class NewViewController: UIViewController {
     
     @objc func linkOpen() {
         guard let url = URL(string: linkUrl) else { return }
-        print(url)
-        UIApplication.shared.open(url)
+        let webVC = WebViewController(url: url)
+        self.present(webVC, animated: true)
     }
 
 }

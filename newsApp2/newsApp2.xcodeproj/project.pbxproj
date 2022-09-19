@@ -20,6 +20,7 @@
 		FD4CF71C28CF50D8006B21A6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD4CF71A28CF50D8006B21A6 /* LaunchScreen.storyboard */; };
 		FD4CF72428CF5102006B21A6 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4CF72328CF5102006B21A6 /* NetworkService.swift */; };
 		FD4CF72628CF512D006B21A6 /* NetworkDataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4CF72528CF512D006B21A6 /* NetworkDataFetcher.swift */; };
+		FD7536CA28D8D75F00EACF1F /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7536C928D8D75E00EACF1F /* WebViewController.swift */; };
 		FDA9606F28D399AD00323083 /* SourcesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA9606E28D399AD00323083 /* SourcesCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -38,6 +39,7 @@
 		FD4CF71D28CF50D8006B21A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FD4CF72328CF5102006B21A6 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		FD4CF72528CF512D006B21A6 /* NetworkDataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataFetcher.swift; sourceTree = "<group>"; };
+		FD7536C928D8D75E00EACF1F /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		FDA9606E28D399AD00323083 /* SourcesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourcesCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -58,6 +60,7 @@
 			children = (
 				FD3D914128CF5849007DDA72 /* NewsTableViewController.swift */,
 				FD3D914C28CF8472007DDA72 /* NewViewController.swift */,
+				FD7536C928D8D75E00EACF1F /* WebViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -192,6 +195,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD4CF72628CF512D006B21A6 /* NetworkDataFetcher.swift in Sources */,
+				FD7536CA28D8D75F00EACF1F /* WebViewController.swift in Sources */,
 				FD4CF72428CF5102006B21A6 /* NetworkService.swift in Sources */,
 				FD3D914828CF61F2007DDA72 /* NewsTableViewCell.swift in Sources */,
 				FD3D914428CF59AE007DDA72 /* SearchResult.swift in Sources */,
