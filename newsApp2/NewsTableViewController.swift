@@ -21,6 +21,8 @@ class NewsTableViewController: UITableViewController {
     
     var countryesArray = Country.countryesArray
     
+    var languagesArray = Language.languagesArray
+    
     var source = Category.business
     
     private lazy var sourcesView: UIView = {
@@ -50,6 +52,22 @@ class NewsTableViewController: UITableViewController {
     }()
     
     private lazy var countryesCollectionView: UICollectionView = {
+        let inset: CGFloat = 10
+        
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.scrollDirection = .horizontal
+        flowLayout.estimatedItemSize = CGSize(width: self.view.layer.bounds.width, height: self.view.layer.bounds.height/6)
+        flowLayout.sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        collection.delegate = self
+        collection.dataSource = self
+        collection.backgroundColor = .white
+        collection.register(SourcesCollectionViewCell.self, forCellWithReuseIdentifier: "SourseCell")
+        collection.translatesAutoresizingMaskIntoConstraints = false
+        return collection
+    }()
+    
+    private lazy var languagesCollectionView: UICollectionView = {
         let inset: CGFloat = 10
         
         let flowLayout = UICollectionViewFlowLayout()
@@ -153,6 +171,7 @@ class NewsTableViewController: UITableViewController {
     private func setupHeader() {
         sourcesView.addSubview(countryesCollectionView)
         sourcesView.addSubview(sourcesCollectionView)
+        sourcesView.addSubview(languagesCollectionView)
         sourcesView.addSubview(resultLabel)
         
         NSLayoutConstraint.activate([
@@ -170,7 +189,14 @@ class NewsTableViewController: UITableViewController {
         ])
         
         NSLayoutConstraint.activate([
-            resultLabel.topAnchor.constraint(equalTo: self.sourcesCollectionView.bottomAnchor, constant: self.view.bounds.height/140),
+            languagesCollectionView.topAnchor.constraint(equalTo: self.sourcesCollectionView.bottomAnchor),
+            languagesCollectionView.leadingAnchor.constraint(equalTo: self.sourcesView.leadingAnchor),
+            languagesCollectionView.trailingAnchor.constraint(equalTo: self.sourcesView.trailingAnchor),
+            languagesCollectionView.heightAnchor.constraint(equalToConstant: self.view.bounds.height/10*0.5),
+        ])
+        
+        NSLayoutConstraint.activate([
+            resultLabel.topAnchor.constraint(equalTo: self.languagesCollectionView.bottomAnchor, constant: self.view.bounds.height/140),
             resultLabel.centerXAnchor.constraint(equalTo: self.sourcesView.centerXAnchor),
             resultLabel.bottomAnchor.constraint(equalTo: self.sourcesView.bottomAnchor, constant: -self.view.bounds.height/140),
         ])
@@ -193,7 +219,7 @@ class NewsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        self.view.bounds.height/7
+        self.view.bounds.height/5
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -225,7 +251,7 @@ extension NewsTableViewController: UICollectionViewDelegate {
                         
             fetchSourceNews(id: sourcesArray[indexPath.row])
             self.tableView.reloadData()
-        } else {
+        } else if collectionView == countryesCollectionView {
             let cell = collectionView.cellForItem(at: indexPath) as! SourcesCollectionViewCell
             
             UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
@@ -246,8 +272,10 @@ extension NewsTableViewController: UICollectionViewDataSource {
         var i = 0
         if collectionView == sourcesCollectionView {
             i = sourcesArray.count
-        } else {
+        } else if collectionView == countryesCollectionView {
             i = countryesArray.count
+        } else {
+            i = languagesArray.count
         }
         return i
     }
@@ -257,18 +285,17 @@ extension NewsTableViewController: UICollectionViewDataSource {
         if collectionView == sourcesCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SourseCell", for: indexPath) as! SourcesCollectionViewCell
             cell.backgroundColor = .systemCyan
-            
-            
-            
             cell.label.text = sourcesArray[indexPath.row]
+            return cell
+        } else if collectionView == countryesCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SourseCell", for: indexPath) as! SourcesCollectionViewCell
+            cell.backgroundColor = .systemCyan
+            cell.label.text = countryesArray[indexPath.row].rawValue
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SourseCell", for: indexPath) as! SourcesCollectionViewCell
             cell.backgroundColor = .systemCyan
-            
-            
-            
-            cell.label.text = countryesArray[indexPath.row].rawValue
+            cell.label.text = languagesArray[indexPath.row]
             return cell
         }
         

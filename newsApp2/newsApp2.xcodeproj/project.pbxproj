@@ -22,7 +22,9 @@
 		FD4CF72628CF512D006B21A6 /* NetworkDataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4CF72528CF512D006B21A6 /* NetworkDataFetcher.swift */; };
 		FD7536CA28D8D75F00EACF1F /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7536C928D8D75E00EACF1F /* WebViewController.swift */; };
 		FDA9606F28D399AD00323083 /* SourcesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA9606E28D399AD00323083 /* SourcesCollectionViewCell.swift */; };
-		FDE7036528E4693800FF4F06 /* Countryes.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDE7036428E4693800FF4F06 /* Countryes.swift */; };
+		FDE7036528E4693800FF4F06 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDE7036428E4693800FF4F06 /* Country.swift */; };
+		FDE7036728E487E900FF4F06 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDE7036628E487E900FF4F06 /* Category.swift */; };
+		FDE7036928E4883500FF4F06 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDE7036828E4883500FF4F06 /* Language.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,7 +44,9 @@
 		FD4CF72528CF512D006B21A6 /* NetworkDataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataFetcher.swift; sourceTree = "<group>"; };
 		FD7536C928D8D75E00EACF1F /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		FDA9606E28D399AD00323083 /* SourcesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourcesCollectionViewCell.swift; sourceTree = "<group>"; };
-		FDE7036428E4693800FF4F06 /* Countryes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Countryes.swift; sourceTree = "<group>"; };
+		FDE7036428E4693800FF4F06 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
+		FDE7036628E487E900FF4F06 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		FDE7036828E4883500FF4F06 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,7 +85,9 @@
 			children = (
 				FD3D914E28D0DD45007DDA72 /* JSON.json */,
 				FD3D914328CF59AE007DDA72 /* SearchResult.swift */,
-				FDE7036428E4693800FF4F06 /* Countryes.swift */,
+				FDE7036628E487E900FF4F06 /* Category.swift */,
+				FDE7036828E4883500FF4F06 /* Language.swift */,
+				FDE7036428E4693800FF4F06 /* Country.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -199,13 +205,15 @@
 			files = (
 				FD4CF72628CF512D006B21A6 /* NetworkDataFetcher.swift in Sources */,
 				FD7536CA28D8D75F00EACF1F /* WebViewController.swift in Sources */,
-				FDE7036528E4693800FF4F06 /* Countryes.swift in Sources */,
+				FDE7036528E4693800FF4F06 /* Country.swift in Sources */,
+				FDE7036928E4883500FF4F06 /* Language.swift in Sources */,
 				FD4CF72428CF5102006B21A6 /* NetworkService.swift in Sources */,
 				FD3D914828CF61F2007DDA72 /* NewsTableViewCell.swift in Sources */,
 				FD3D914428CF59AE007DDA72 /* SearchResult.swift in Sources */,
 				FD3D914D28CF8473007DDA72 /* NewViewController.swift in Sources */,
 				FDA9606F28D399AD00323083 /* SourcesCollectionViewCell.swift in Sources */,
 				FD4CF71728CF50D8006B21A6 /* newsApp2.xcdatamodeld in Sources */,
+				FDE7036728E487E900FF4F06 /* Category.swift in Sources */,
 				FD4CF70D28CF50D8006B21A6 /* AppDelegate.swift in Sources */,
 				FD3D914228CF5849007DDA72 /* NewsTableViewController.swift in Sources */,
 				FD4CF70F28CF50D8006B21A6 /* SceneDelegate.swift in Sources */,

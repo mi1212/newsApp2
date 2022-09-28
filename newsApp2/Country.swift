@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 enum Country: String, CaseIterable {
     case allCountries = "all"
     case ar = "Argentina"
