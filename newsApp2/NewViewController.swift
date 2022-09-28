@@ -66,6 +66,7 @@ class NewViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.preferredFont(forTextStyle: .footnote)
         label.numberOfLines = 0
+        label.textAlignment = NSTextAlignment.right
         label.text = "description: "
         return label
     }()
@@ -93,6 +94,7 @@ class NewViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.preferredFont(forTextStyle: .footnote)
         label.numberOfLines = 0
+        label.textAlignment = NSTextAlignment.justified
         label.text = "content: "
         return label
     }()
@@ -112,7 +114,7 @@ class NewViewController: UIViewController {
         button.titleLabel?.textAlignment = .natural
         button.setTitleColor(.link, for: .normal)
         button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .footnote)
-        button.titleLabel?.textAlignment = .left
+        button.contentHorizontalAlignment = .left
         button.addTarget(self, action: #selector(linkOpen), for: .touchUpInside)
         return button
     }()
@@ -231,9 +233,11 @@ class NewViewController: UIViewController {
     }
     
     @objc func linkOpen() {
+        
         guard let url = URL(string: linkUrl) else { return }
         let webVC = WebViewController(url: url)
         self.present(webVC, animated: true)
+
     }
 
 }

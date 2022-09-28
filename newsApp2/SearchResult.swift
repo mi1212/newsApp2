@@ -27,26 +27,8 @@ struct Result: Decodable {
     let language: String?
 }
 
-
-//class SourcesRequest: Decodable {
-//    let status: String
-//    let sources: [Source]?
-//    let message: String?
-//}
-//
-//struct Source: Decodable {
-//    let id: String?
-//    let name: String?
-//    
-//    
-//    let description: String?
-//    let url: String?
-//    let category: String?
-//    let language: String?
-//    let country: String?
-//}
-
 enum Category: String, CaseIterable {
+    case allNews = "all news"
     case business = "business"
     case entertainment = "entertainment"
     case environment = "environment"
@@ -63,3 +45,4 @@ enum Category: String, CaseIterable {
         return Category.allCases.map { $0.rawValue }
       }
 }
+

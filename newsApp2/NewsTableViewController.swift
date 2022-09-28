@@ -8,7 +8,7 @@
 import UIKit
 
 class NewsTableViewController: UITableViewController {
-
+    
     let networkDataFetcher = NetworkDataFetcher()
     
     var newsArray = [Result]()
@@ -19,19 +19,37 @@ class NewsTableViewController: UITableViewController {
     
     var sourcesArray = Category.CategoryArray
     
+    var countryesArray = Country.countryesArray
+    
     var source = Category.business
     
     private lazy var sourcesView: UIView = {
         let view = UIView()
         let blurEffect = UIBlurEffect(style: .extraLight)
-            let blurEffectView = UIVisualEffectView(effect: blurEffect)
-            blurEffectView.frame = view.bounds
-            blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = view.bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(blurEffectView)
         return view
     }()
     
     private lazy var sourcesCollectionView: UICollectionView = {
+        let inset: CGFloat = 10
+        
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.scrollDirection = .horizontal
+        flowLayout.estimatedItemSize = CGSize(width: self.view.layer.bounds.width, height: self.view.layer.bounds.height/6)
+        flowLayout.sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        collection.delegate = self
+        collection.dataSource = self
+        collection.backgroundColor = .white
+        collection.register(SourcesCollectionViewCell.self, forCellWithReuseIdentifier: "SourseCell")
+        collection.translatesAutoresizingMaskIntoConstraints = false
+        return collection
+    }()
+    
+    private lazy var countryesCollectionView: UICollectionView = {
         let inset: CGFloat = 10
         
         let flowLayout = UICollectionViewFlowLayout()
@@ -80,34 +98,75 @@ class NewsTableViewController: UITableViewController {
     }
     
     private func fetchSourceNews(id: String) {
-        self.networkDataFetcher.fetchSourceNews(id: id) { [self] (searchResults) in
+        
+        if id != "all news" {
             
-            if searchResults?.status == "error" {
-                let text = searchResults?.message
-                print(text!)
+            self.networkDataFetcher.fetchSourceNews(id: id) { [self] (searchResults) in
+                
+                if searchResults?.status == "error" {
+                    let text = searchResults?.message
+                    print(text!)
+                }
+                
+                guard let news = searchResults?.results else { return }
+                
+                newsArray = news
+                newsCount = news.count
+                totalResults = searchResults?.totalResults ?? 0
+                resultLabel.text = "In category \(id) found \(totalResults) news"
+                tableView.rowHeight = self.view.layer.bounds.height/6
+                tableView.reloadData()
             }
+        }  else {
+            fetchNews()
+        }
+    }
+    
+    private func fetchCountryNews(country: String) {
+        
+        if country != "allCountries" {
             
-            guard let news = searchResults?.results else { return }
+            print("fetch")
             
-            newsArray = news
-            newsCount = news.count
-            totalResults = searchResults?.totalResults ?? 0
-            resultLabel.text = "results \(totalResults)"
-            tableView.rowHeight = self.view.layer.bounds.height/6
-            tableView.reloadData()
+            self.networkDataFetcher.fetchCountryNews(country: country) { [self] (searchResults) in
+                
+                if searchResults?.status == "error" {
+                    let text = searchResults?.message
+                    print(text!)
+                }
+                
+                guard let news = searchResults?.results else { return }
+                
+                newsArray = news
+                newsCount = news.count
+                totalResults = searchResults?.totalResults ?? 0
+                resultLabel.text = "In \(country) found \(totalResults) news"
+                tableView.rowHeight = self.view.layer.bounds.height/6
+                tableView.reloadData()
+                
+            }
+        }  else {
+            fetchNews()
         }
     }
     
     private func setupHeader() {
+        sourcesView.addSubview(countryesCollectionView)
         sourcesView.addSubview(sourcesCollectionView)
         sourcesView.addSubview(resultLabel)
         
+        NSLayoutConstraint.activate([
+            countryesCollectionView.topAnchor.constraint(equalTo: self.sourcesView.topAnchor),
+            countryesCollectionView.leadingAnchor.constraint(equalTo: self.sourcesView.leadingAnchor),
+            countryesCollectionView.trailingAnchor.constraint(equalTo: self.sourcesView.trailingAnchor),
+            countryesCollectionView.heightAnchor.constraint(equalToConstant: self.view.bounds.height/10*0.5),
+        ])
         
         NSLayoutConstraint.activate([
-            sourcesCollectionView.topAnchor.constraint(equalTo: self.sourcesView.topAnchor),
+            sourcesCollectionView.topAnchor.constraint(equalTo: self.countryesCollectionView.bottomAnchor),
             sourcesCollectionView.leadingAnchor.constraint(equalTo: self.sourcesView.leadingAnchor),
             sourcesCollectionView.trailingAnchor.constraint(equalTo: self.sourcesView.trailingAnchor),
-            sourcesCollectionView.heightAnchor.constraint(equalToConstant: self.view.bounds.height/12*0.6),
+            sourcesCollectionView.heightAnchor.constraint(equalToConstant: self.view.bounds.height/10*0.5),
         ])
         
         NSLayoutConstraint.activate([
@@ -118,36 +177,12 @@ class NewsTableViewController: UITableViewController {
         
     }
     
-    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
-//        if indexPath.row + 1 == newsArray.count {
-//
-//            self.networkDataFetcher.fetchNews() { [self] (searchResults) in
-//
-//                if searchResults?.status == "error" {
-//                    let text = searchResults?.message
-//                    print(text as Any)
-//                }
-//
-//                guard let news = searchResults?.results else { return }
-//
-//                for i in 0...news.count-1 {
-//                    newsArray.insert(news[i], at: newsCount + i)
-//                }
-//            }
-//
-//            newsCount = newsArray.count
-//            print(newsCount)
-//            self.tableView.reloadData()
-//        }
-    }
-
     // MARK: - Table view data source
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return newsArray.count
     }
@@ -158,7 +193,7 @@ class NewsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        self.view.bounds.height/12
+        self.view.bounds.height/7
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -167,7 +202,7 @@ class NewsTableViewController: UITableViewController {
         cell.photoImageView.layer.opacity = 1
         return cell
     }
-
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = NewViewController()
         vc.setupViewController(result: newsArray[indexPath.row])
@@ -178,25 +213,67 @@ class NewsTableViewController: UITableViewController {
 
 extension NewsTableViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.cellForItem(at: indexPath)?.backgroundColor = .orange
-        fetchSourceNews(id: sourcesArray[indexPath.row])
-        self.tableView.reloadData()
+        
+        if collectionView == sourcesCollectionView {
+            let cell = collectionView.cellForItem(at: indexPath) as! SourcesCollectionViewCell
+            
+            UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
+                cell.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+            } completion: { _ in
+                cell.transform = CGAffineTransform(scaleX: 1, y: 1)
+            }
+                        
+            fetchSourceNews(id: sourcesArray[indexPath.row])
+            self.tableView.reloadData()
+        } else {
+            let cell = collectionView.cellForItem(at: indexPath) as! SourcesCollectionViewCell
+            
+            UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
+                cell.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+            } completion: { _ in
+                cell.transform = CGAffineTransform(scaleX: 1, y: 1)
+            }
+                        
+            fetchCountryNews(country: "\(countryesArray[indexPath.row].self)")
+            self.tableView.reloadData()}
     }
-}
 
+}
 
 extension NewsTableViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        sourcesArray.count
+        var i = 0
+        if collectionView == sourcesCollectionView {
+            i = sourcesArray.count
+        } else {
+            i = countryesArray.count
+        }
+        return i
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SourseCell", for: indexPath) as! SourcesCollectionViewCell
-        cell.backgroundColor = .systemCyan
-        cell.label.text = sourcesArray[indexPath.row]
-        return cell
+        
+        if collectionView == sourcesCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SourseCell", for: indexPath) as! SourcesCollectionViewCell
+            cell.backgroundColor = .systemCyan
+            
+            
+            
+            cell.label.text = sourcesArray[indexPath.row]
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SourseCell", for: indexPath) as! SourcesCollectionViewCell
+            cell.backgroundColor = .systemCyan
+            
+            
+            
+            cell.label.text = countryesArray[indexPath.row].rawValue
+            return cell
+        }
+        
+        
     }
-    
 }
+
 
