@@ -11,85 +11,13 @@ class NewsTableViewController: UITableViewController {
     
     let networkDataFetcher = NetworkDataFetcher()
     
+    lazy var header = HeaderView(width: self.view.bounds.width , height: self.view.bounds.height*0.17)
+ 
     var newsArray = [Result]()
     
     var newsCount = 0
     
     var totalResults = 0
-    
-    var sourcesArray = Category.CategoryArray
-    
-    var countryesArray = Country.countryesArray
-    
-    var languagesArray = Language.languagesArray
-    
-    var source = Category.business
-    
-    private lazy var sourcesView: UIView = {
-        let view = UIView()
-        let blurEffect = UIBlurEffect(style: .extraLight)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(blurEffectView)
-        return view
-    }()
-    
-    private lazy var sourcesCollectionView: UICollectionView = {
-        let inset: CGFloat = 10
-        
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .horizontal
-        flowLayout.estimatedItemSize = CGSize(width: self.view.layer.bounds.width, height: self.view.layer.bounds.height/6)
-        flowLayout.sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-        collection.delegate = self
-        collection.dataSource = self
-        collection.backgroundColor = .white
-        collection.register(SourcesCollectionViewCell.self, forCellWithReuseIdentifier: "SourseCell")
-        collection.translatesAutoresizingMaskIntoConstraints = false
-        return collection
-    }()
-    
-    private lazy var countryesCollectionView: UICollectionView = {
-        let inset: CGFloat = 10
-        
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .horizontal
-        flowLayout.estimatedItemSize = CGSize(width: self.view.layer.bounds.width, height: self.view.layer.bounds.height/6)
-        flowLayout.sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-        collection.delegate = self
-        collection.dataSource = self
-        collection.backgroundColor = .white
-        collection.register(SourcesCollectionViewCell.self, forCellWithReuseIdentifier: "SourseCell")
-        collection.translatesAutoresizingMaskIntoConstraints = false
-        return collection
-    }()
-    
-    private lazy var languagesCollectionView: UICollectionView = {
-        let inset: CGFloat = 10
-        
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .horizontal
-        flowLayout.estimatedItemSize = CGSize(width: self.view.layer.bounds.width, height: self.view.layer.bounds.height/6)
-        flowLayout.sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-        collection.delegate = self
-        collection.dataSource = self
-        collection.backgroundColor = .white
-        collection.register(SourcesCollectionViewCell.self, forCellWithReuseIdentifier: "SourseCell")
-        collection.translatesAutoresizingMaskIntoConstraints = false
-        return collection
-    }()
-    
-    let resultLabel: UILabel = {
-        let label = UILabel()
-        label.text = ""
-        label.backgroundColor = .clear
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -109,7 +37,7 @@ class NewsTableViewController: UITableViewController {
             newsArray = news
             newsCount = news.count
             totalResults = searchResults?.totalResults ?? 0
-            resultLabel.text = "results \(totalResults)"
+//            resultLabel.text = "results \(totalResults)"
             tableView.rowHeight = self.view.layer.bounds.height/6
             tableView.reloadData()
         }
@@ -131,7 +59,7 @@ class NewsTableViewController: UITableViewController {
                 newsArray = news
                 newsCount = news.count
                 totalResults = searchResults?.totalResults ?? 0
-                resultLabel.text = "In category \(id) found \(totalResults) news"
+//                resultLabel.text = "In category \(id) found \(totalResults) news"
                 tableView.rowHeight = self.view.layer.bounds.height/6
                 tableView.reloadData()
             }
@@ -158,7 +86,7 @@ class NewsTableViewController: UITableViewController {
                 newsArray = news
                 newsCount = news.count
                 totalResults = searchResults?.totalResults ?? 0
-                resultLabel.text = "In \(country) found \(totalResults) news"
+//                resultLabel.text = "In \(country) found \(totalResults) news"
                 tableView.rowHeight = self.view.layer.bounds.height/6
                 tableView.reloadData()
                 
@@ -167,42 +95,7 @@ class NewsTableViewController: UITableViewController {
             fetchNews()
         }
     }
-    
-    private func setupHeader() {
-        sourcesView.addSubview(countryesCollectionView)
-        sourcesView.addSubview(sourcesCollectionView)
-        sourcesView.addSubview(languagesCollectionView)
-        sourcesView.addSubview(resultLabel)
-        
-        NSLayoutConstraint.activate([
-            countryesCollectionView.topAnchor.constraint(equalTo: self.sourcesView.topAnchor),
-            countryesCollectionView.leadingAnchor.constraint(equalTo: self.sourcesView.leadingAnchor),
-            countryesCollectionView.trailingAnchor.constraint(equalTo: self.sourcesView.trailingAnchor),
-            countryesCollectionView.heightAnchor.constraint(equalToConstant: self.view.bounds.height/10*0.5),
-        ])
-        
-        NSLayoutConstraint.activate([
-            sourcesCollectionView.topAnchor.constraint(equalTo: self.countryesCollectionView.bottomAnchor),
-            sourcesCollectionView.leadingAnchor.constraint(equalTo: self.sourcesView.leadingAnchor),
-            sourcesCollectionView.trailingAnchor.constraint(equalTo: self.sourcesView.trailingAnchor),
-            sourcesCollectionView.heightAnchor.constraint(equalToConstant: self.view.bounds.height/10*0.5),
-        ])
-        
-        NSLayoutConstraint.activate([
-            languagesCollectionView.topAnchor.constraint(equalTo: self.sourcesCollectionView.bottomAnchor),
-            languagesCollectionView.leadingAnchor.constraint(equalTo: self.sourcesView.leadingAnchor),
-            languagesCollectionView.trailingAnchor.constraint(equalTo: self.sourcesView.trailingAnchor),
-            languagesCollectionView.heightAnchor.constraint(equalToConstant: self.view.bounds.height/10*0.5),
-        ])
-        
-        NSLayoutConstraint.activate([
-            resultLabel.topAnchor.constraint(equalTo: self.languagesCollectionView.bottomAnchor, constant: self.view.bounds.height/140),
-            resultLabel.centerXAnchor.constraint(equalTo: self.sourcesView.centerXAnchor),
-            resultLabel.bottomAnchor.constraint(equalTo: self.sourcesView.bottomAnchor, constant: -self.view.bounds.height/140),
-        ])
-        
-    }
-    
+   
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -214,12 +107,11 @@ class NewsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        setupHeader()
-        return sourcesView
+        header
     }
-    
+
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        self.view.bounds.height/5
+        self.view.bounds.height*0.17
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -237,70 +129,8 @@ class NewsTableViewController: UITableViewController {
     }
 }
 
-extension NewsTableViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        if collectionView == sourcesCollectionView {
-            let cell = collectionView.cellForItem(at: indexPath) as! SourcesCollectionViewCell
-            
-            UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
-                cell.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
-            } completion: { _ in
-                cell.transform = CGAffineTransform(scaleX: 1, y: 1)
-            }
-                        
-            fetchSourceNews(id: sourcesArray[indexPath.row])
-            self.tableView.reloadData()
-        } else if collectionView == countryesCollectionView {
-            let cell = collectionView.cellForItem(at: indexPath) as! SourcesCollectionViewCell
-            
-            UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
-                cell.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
-            } completion: { _ in
-                cell.transform = CGAffineTransform(scaleX: 1, y: 1)
-            }
-                        
-            fetchCountryNews(country: "\(countryesArray[indexPath.row].self)")
-            self.tableView.reloadData()}
-    }
 
-}
 
-extension NewsTableViewController: UICollectionViewDataSource {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        var i = 0
-        if collectionView == sourcesCollectionView {
-            i = sourcesArray.count
-        } else if collectionView == countryesCollectionView {
-            i = countryesArray.count
-        } else {
-            i = languagesArray.count
-        }
-        return i
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        if collectionView == sourcesCollectionView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SourseCell", for: indexPath) as! SourcesCollectionViewCell
-            cell.backgroundColor = .systemCyan
-            cell.label.text = sourcesArray[indexPath.row]
-            return cell
-        } else if collectionView == countryesCollectionView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SourseCell", for: indexPath) as! SourcesCollectionViewCell
-            cell.backgroundColor = .systemCyan
-            cell.label.text = countryesArray[indexPath.row].rawValue
-            return cell
-        } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SourseCell", for: indexPath) as! SourcesCollectionViewCell
-            cell.backgroundColor = .systemCyan
-            cell.label.text = languagesArray[indexPath.row]
-            return cell
-        }
-        
-        
-    }
-}
+
 
 

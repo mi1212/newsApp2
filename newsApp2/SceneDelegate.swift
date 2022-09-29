@@ -21,6 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         self.window = UIWindow(windowScene: windowScene)
         self.window?.rootViewController = NewsTableViewController(style: .plain)
+//        self.window?.rootViewController = TestViewController()
         self.window?.makeKeyAndVisible()
     }
 
