@@ -7,13 +7,19 @@
 
 import UIKit
 
+protocol HeaderViewDelegate: AnyObject {
+    func chooseParam(section: Int, row: Int)
+}
+
 class HeaderView: UIView {
+    
+    weak var delegate: HeaderViewDelegate?
     
     var height: CGFloat = 0
     
     var width: CGFloat = 0
     
-    private lazy var sourcesView: UIView = {
+    private lazy var blurView: UIView = {
         let view = UIView()
         let blurEffect = UIBlurEffect(style: .extraLight)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
@@ -47,7 +53,6 @@ class HeaderView: UIView {
         self.init()
         self.width = width
         self.height = height
-//        self.translatesAutoresizingMaskIntoConstraints = false
         setupHeader()
     }
     
@@ -60,41 +65,32 @@ class HeaderView: UIView {
     }
     
     private func setupHeader() {
-        self.addSubview(sourcesView)
+        self.addSubview(blurView)
         self.addSubview(buttonTableView)
         self.addSubview(resultLabel)
         
         NSLayoutConstraint.activate([
-            sourcesView.topAnchor.constraint(equalTo: self.topAnchor),
-            sourcesView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            sourcesView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            sourcesView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            blurView.topAnchor.constraint(equalTo: self.topAnchor),
+            blurView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            blurView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            blurView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
         ])
         
         NSLayoutConstraint.activate([
-            buttonTableView.topAnchor.constraint(equalTo: sourcesView.topAnchor),
-            buttonTableView.leadingAnchor.constraint(equalTo: sourcesView.leadingAnchor),
-            buttonTableView.trailingAnchor.constraint(equalTo: sourcesView.trailingAnchor),
+            buttonTableView.topAnchor.constraint(equalTo: self.topAnchor),
+            buttonTableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            buttonTableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             buttonTableView.bottomAnchor.constraint(equalTo: resultLabel.topAnchor)
         ])
         
         NSLayoutConstraint.activate([
             resultLabel.topAnchor.constraint(equalTo: buttonTableView.bottomAnchor),
-            resultLabel.leadingAnchor.constraint(equalTo: sourcesView.leadingAnchor),
-            resultLabel.trailingAnchor.constraint(equalTo: sourcesView.trailingAnchor),
-            resultLabel.bottomAnchor.constraint(equalTo: sourcesView.bottomAnchor),
+            resultLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            resultLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            resultLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             resultLabel.heightAnchor.constraint(equalToConstant: height/4)
         ])
     }
-    
-    private func pressCell(cell: UICollectionViewCell) {
-        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
-            cell.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
-        } completion: { _ in
-            cell.transform = CGAffineTransform(scaleX: 1, y: 1)
-        }
-    }
-    
 }
 
 extension HeaderView: UITableViewDataSource {
@@ -109,13 +105,15 @@ extension HeaderView: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "headercell", for: indexPath) as! HeaderViewCell
+        cell.delegate = self
+        cell.section = indexPath.section
         switch indexPath.section {
         case 0:
-            cell.array = Country.countryesArray
+            cell.array = Country.countryesStringArray
         case 1:
-            cell.array = Category.categoryArray
+            cell.array = Category.categoryStringArray
         default:
-            cell.array = Language.languagesArray
+            cell.array = Language.languagesStringArray
         }
         return cell
         
@@ -127,3 +125,12 @@ extension HeaderView: UITableViewDelegate {
         tableView.bounds.height/3
     }
 }
+
+extension HeaderView: HeaderViewCellDelegate {
+    func chooseParam(section: Int, row: Int) {
+        print("section \(section), row \(row)")
+        delegate?.chooseParam(section: section, row: row)
+    }
+}
+
+

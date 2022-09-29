@@ -7,7 +7,15 @@
 
 import UIKit
 
+protocol HeaderViewCellDelegate: AnyObject {
+    func chooseParam(section: Int, row: Int)
+}
+
 class HeaderViewCell: UITableViewCell {
+     
+    weak var delegate: HeaderViewCellDelegate?
+    
+    var section = 0
 
     lazy var array = [String]()
     
@@ -49,6 +57,14 @@ class HeaderViewCell: UITableViewCell {
             collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
     }
+    
+    private func pressCell(cell: UICollectionViewCell) {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
+            cell.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        } completion: { _ in
+            cell.transform = CGAffineTransform(scaleX: 1, y: 1)
+        }
+    }
 
 }
 
@@ -61,9 +77,7 @@ extension HeaderViewCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SourseCell", for: indexPath) as! SourcesCollectionViewCell
-//        cell.backgroundColor = .systemCyan
-            cell.label.text = array[indexPath.row]
-            print(indexPath)
+        cell.label.text = "\(array[indexPath.row])"
         return cell
     }
 
@@ -74,6 +88,13 @@ extension HeaderViewCell: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(indexPath)
+        
+        let cell = collectionView.cellForItem(at: indexPath) as! SourcesCollectionViewCell
+        pressCell(cell: cell)
+        
+        delegate?.chooseParam(section: section, row: indexPath.row)
+        
+        
     }
 
         func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

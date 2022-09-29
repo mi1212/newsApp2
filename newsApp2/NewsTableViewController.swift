@@ -12,16 +12,19 @@ class NewsTableViewController: UITableViewController {
     let networkDataFetcher = NetworkDataFetcher()
     
     lazy var header = HeaderView(width: self.view.bounds.width , height: self.view.bounds.height*0.17)
- 
+    
     var newsArray = [Result]()
     
     var newsCount = 0
     
     var totalResults = 0
     
+    var parametrs = [String: String]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchNews()
+        header.delegate = self
         self.tableView.register(NewsTableViewCell.self, forCellReuseIdentifier: "NewsTableViewCell")
     }
     
@@ -37,65 +40,31 @@ class NewsTableViewController: UITableViewController {
             newsArray = news
             newsCount = news.count
             totalResults = searchResults?.totalResults ?? 0
-//            resultLabel.text = "results \(totalResults)"
             tableView.rowHeight = self.view.layer.bounds.height/6
             tableView.reloadData()
         }
     }
     
-    private func fetchSourceNews(id: String) {
+    private func fetchSourceNews(param: [String: String]) {
         
-        if id != "all news" {
+        self.networkDataFetcher.fetchSourceNews(param: param) { [self] (searchResults) in
             
-            self.networkDataFetcher.fetchSourceNews(id: id) { [self] (searchResults) in
-                
-                if searchResults?.status == "error" {
-                    let text = searchResults?.message
-                    print(text!)
-                }
-                
-                guard let news = searchResults?.results else { return }
-                
-                newsArray = news
-                newsCount = news.count
-                totalResults = searchResults?.totalResults ?? 0
-//                resultLabel.text = "In category \(id) found \(totalResults) news"
-                tableView.rowHeight = self.view.layer.bounds.height/6
-                tableView.reloadData()
+            if searchResults?.status == "error" {
+                let text = searchResults?.message
+                print(text!)
             }
-        }  else {
-            fetchNews()
+            
+            guard let news = searchResults?.results else { return }
+            
+            newsArray = news
+            newsCount = news.count
+            totalResults = searchResults?.totalResults ?? 0
+            tableView.rowHeight = self.view.layer.bounds.height/6
+            tableView.reloadData()
         }
+        
     }
     
-    private func fetchCountryNews(country: String) {
-        
-        if country != "allCountries" {
-            
-            print("fetch")
-            
-            self.networkDataFetcher.fetchCountryNews(country: country) { [self] (searchResults) in
-                
-                if searchResults?.status == "error" {
-                    let text = searchResults?.message
-                    print(text!)
-                }
-                
-                guard let news = searchResults?.results else { return }
-                
-                newsArray = news
-                newsCount = news.count
-                totalResults = searchResults?.totalResults ?? 0
-//                resultLabel.text = "In \(country) found \(totalResults) news"
-                tableView.rowHeight = self.view.layer.bounds.height/6
-                tableView.reloadData()
-                
-            }
-        }  else {
-            fetchNews()
-        }
-    }
-   
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -109,7 +78,7 @@ class NewsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         header
     }
-
+    
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         self.view.bounds.height*0.17
     }
@@ -129,6 +98,34 @@ class NewsTableViewController: UITableViewController {
     }
 }
 
+extension NewsTableViewController: HeaderViewDelegate {
+    func chooseParam(section: Int, row: Int) {
+        switch section {
+        case 0:
+            if row != 0{
+                parametrs["country"] = "\(Country.countryesArray[row])"
+            } else {
+                parametrs["country"] = nil
+            }
+        case 1:
+            if row != 0{
+                parametrs["category"] = "\(Category.categoryArray[row])"
+            } else {
+                parametrs["category"] = nil
+            }
+        default:
+            if row != 0{
+                parametrs["language"] = "\(Language.languagesArray[row])"
+            } else {
+                parametrs["language"] = nil
+            }
+        }
+        
+        fetchSourceNews(param: parametrs)
+        
+    }
+
+}
 
 
 

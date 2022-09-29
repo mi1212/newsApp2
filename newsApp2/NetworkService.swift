@@ -36,7 +36,6 @@ class NetworkService {
 
     private func requestParametrs() -> [String: String] {
         var parametrs = [String: String]()
-//        parametrs["country"] = "ru"
         parametrs["page"] = String(page)
 //        page += 1
         return parametrs
@@ -55,12 +54,10 @@ class NetworkService {
     
     //
     
-    func requestSourceNews(_ id: String?, _ country: String?,  completion: @escaping (Data?, Error?) -> Void) {
+    func requestSourceNews(param: [String:String],  completion: @escaping (Data?, Error?) -> Void) {
         var parametrs = self.requestParametrs()
 
-            parametrs["category"] = id
-       
-            parametrs["country"] = country
+            parametrs = param
         
         let url = self.url(params: parametrs)
         var request = URLRequest(url: url)

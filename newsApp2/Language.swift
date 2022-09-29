@@ -8,7 +8,7 @@
 import Foundation
 
 enum Language: String, CaseIterable {
-    case allNews = "all language"
+    case allNews = "all"
     case ar = "Arabic"
     case de = "German"
     case en = "English"
@@ -23,7 +23,11 @@ enum Language: String, CaseIterable {
     case sv = "Spanish"
     case zh = "Chinese"
 
-    static var languagesArray: [String] {
+    static var languagesArray: [Language] {
+        return Language.allCases.map { $0 }
+      }
+    
+    static var languagesStringArray: [String] {
         return Language.allCases.map { $0.rawValue }
       }
 }

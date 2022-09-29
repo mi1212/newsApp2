@@ -8,7 +8,7 @@
 import Foundation
 
 enum Category: String, CaseIterable {
-    case allNews = "all news"
+    case allNews = "all"
     case business = "business"
     case entertainment = "entertainment"
     case environment = "environment"
@@ -21,7 +21,11 @@ enum Category: String, CaseIterable {
     case top = "top"
     case world = "world"
     
-    static var categoryArray: [String] {
+    static var categoryArray: [Category] {
+        return Category.allCases.map { $0 }
+      }
+    
+    static var categoryStringArray: [String] {
         return Category.allCases.map { $0.rawValue }
       }
 }
