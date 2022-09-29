@@ -21,7 +21,7 @@ enum Category: String, CaseIterable {
     case top = "top"
     case world = "world"
     
-    static var CategoryArray: [String] {
+    static var categoryArray: [String] {
         return Category.allCases.map { $0.rawValue }
       }
 }

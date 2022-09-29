@@ -13,12 +13,6 @@ class HeaderView: UIView {
     
     var width: CGFloat = 0
     
-    var countryesArray = Country.countryesArray
-    
-    var sourcesArray = Category.CategoryArray
-    
-    var languagesArray = Language.languagesArray
-    
     private lazy var sourcesView: UIView = {
         let view = UIView()
         let blurEffect = UIBlurEffect(style: .extraLight)
@@ -30,49 +24,22 @@ class HeaderView: UIView {
         return view
     }()
     
-    private lazy var layout: UICollectionViewFlowLayout = {
-        let layout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        layout.estimatedItemSize = CGSize(width: width/2, height: height/4)
-        layout.scrollDirection = .horizontal
-        return layout
+    private lazy var buttonTableView: UITableView = {
+        let table = UITableView()
+        table.delegate = self
+        table.dataSource = self
+        table.backgroundColor = .green
+        table.register(HeaderViewCell.self, forCellReuseIdentifier: "headercell")
+        table.translatesAutoresizingMaskIntoConstraints = false
+        return table
     }()
-    
-    private lazy var countryesCollectionView: UICollectionView = {
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.delegate = self
-        collection.dataSource = self
-//        collection.backgroundColor = .clear
-        collection.register(SourcesCollectionViewCell.self, forCellWithReuseIdentifier: "SourseCell")
-        collection.translatesAutoresizingMaskIntoConstraints = false
-        return collection
-    }()
-    
-    private lazy var sourcesCollectionView: UICollectionView = {
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.delegate = self
-        collection.dataSource = self
-//        collection.backgroundColor = .clear
-        collection.register(SourcesCollectionViewCell.self, forCellWithReuseIdentifier: "SourseCell")
-        collection.translatesAutoresizingMaskIntoConstraints = false
-        return collection
-    }()
-    
-    private lazy var languagesCollectionView: UICollectionView = {
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.delegate = self
-        collection.dataSource = self
-//        collection.backgroundColor = .clear
-        collection.register(SourcesCollectionViewCell.self, forCellWithReuseIdentifier: "SourseCell")
-        collection.translatesAutoresizingMaskIntoConstraints = false
-        return collection
-    }()
-    
+        
     let resultLabel: UILabel = {
         let label = UILabel()
         label.text = "result"
         label.backgroundColor = .clear
         label.translatesAutoresizingMaskIntoConstraints = false
+        
         return label
     }()
     
@@ -80,6 +47,7 @@ class HeaderView: UIView {
         self.init()
         self.width = width
         self.height = height
+//        self.translatesAutoresizingMaskIntoConstraints = false
         setupHeader()
     }
     
@@ -93,13 +61,8 @@ class HeaderView: UIView {
     
     private func setupHeader() {
         self.addSubview(sourcesView)
-        self.addSubview(countryesCollectionView)
-        self.addSubview(sourcesCollectionView)
-        self.addSubview(languagesCollectionView)
+        self.addSubview(buttonTableView)
         self.addSubview(resultLabel)
-        countryesCollectionView.collectionViewLayout.invalidateLayout()
-        sourcesCollectionView.collectionViewLayout.invalidateLayout()
-        sourcesCollectionView.collectionViewLayout.invalidateLayout()
         
         NSLayoutConstraint.activate([
             sourcesView.topAnchor.constraint(equalTo: self.topAnchor),
@@ -109,32 +72,19 @@ class HeaderView: UIView {
         ])
         
         NSLayoutConstraint.activate([
-            countryesCollectionView.topAnchor.constraint(equalTo: self.topAnchor),
-            countryesCollectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            countryesCollectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            countryesCollectionView.heightAnchor.constraint(equalToConstant: height/4)
+            buttonTableView.topAnchor.constraint(equalTo: sourcesView.topAnchor),
+            buttonTableView.leadingAnchor.constraint(equalTo: sourcesView.leadingAnchor),
+            buttonTableView.trailingAnchor.constraint(equalTo: sourcesView.trailingAnchor),
+            buttonTableView.bottomAnchor.constraint(equalTo: resultLabel.topAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            sourcesCollectionView.topAnchor.constraint(equalTo: self.countryesCollectionView.bottomAnchor, constant: 2),
-            sourcesCollectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            sourcesCollectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            sourcesCollectionView.heightAnchor.constraint(equalToConstant: height/4)
+            resultLabel.topAnchor.constraint(equalTo: buttonTableView.bottomAnchor),
+            resultLabel.leadingAnchor.constraint(equalTo: sourcesView.leadingAnchor),
+            resultLabel.trailingAnchor.constraint(equalTo: sourcesView.trailingAnchor),
+            resultLabel.bottomAnchor.constraint(equalTo: sourcesView.bottomAnchor),
+            resultLabel.heightAnchor.constraint(equalToConstant: height/4)
         ])
-        
-        NSLayoutConstraint.activate([
-            languagesCollectionView.topAnchor.constraint(equalTo: self.sourcesCollectionView.bottomAnchor, constant: 2),
-            languagesCollectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            languagesCollectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            languagesCollectionView.heightAnchor.constraint(equalToConstant: height/4)
-        ])
-        
-        NSLayoutConstraint.activate([
-            resultLabel.topAnchor.constraint(equalTo: self.languagesCollectionView.bottomAnchor, constant: 2),
-            resultLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            resultLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -2),
-        ])
-        
     }
     
     private func pressCell(cell: UICollectionViewCell) {
@@ -147,74 +97,33 @@ class HeaderView: UIView {
     
 }
 
-extension HeaderView: UICollectionViewDataSource {
+extension HeaderView: UITableViewDataSource {
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        var i = 0
-        switch collectionView {
-        case sourcesCollectionView:
-            i = sourcesArray.count
-        case countryesCollectionView:
-            i = countryesArray.count
-        case languagesCollectionView:
-            i = languagesArray.count
+    func numberOfSections(in tableView: UITableView) -> Int {
+        3
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "headercell", for: indexPath) as! HeaderViewCell
+        switch indexPath.section {
+        case 0:
+            cell.array = Country.countryesArray
+        case 1:
+            cell.array = Category.categoryArray
         default:
-            break
+            cell.array = Language.languagesArray
         }
-        return i
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        if collectionView == sourcesCollectionView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SourseCell", for: indexPath) as! SourcesCollectionViewCell
-            cell.backgroundColor = .systemCyan
-            cell.label.text = sourcesArray[indexPath.row]
-            return cell
-        } else if collectionView == countryesCollectionView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SourseCell", for: indexPath) as! SourcesCollectionViewCell
-            cell.backgroundColor = .systemCyan
-            cell.label.text = countryesArray[indexPath.row].rawValue
-            return cell
-        } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SourseCell", for: indexPath) as! SourcesCollectionViewCell
-            cell.backgroundColor = .systemCyan
-            cell.label.text = languagesArray[indexPath.row]
-            return cell
-        }
+        return cell
         
     }
-    
-    
 }
 
-extension HeaderView: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        switch collectionView {
-        case sourcesCollectionView:
-            
-            let cell = collectionView.cellForItem(at: indexPath) as! SourcesCollectionViewCell
-            pressCell(cell: cell)
-            
-        case countryesCollectionView:
-            
-            let cell = collectionView.cellForItem(at: indexPath) as! SourcesCollectionViewCell
-            pressCell(cell: cell)
-            
-        case languagesCollectionView:
-            
-            let cell = collectionView.cellForItem(at: indexPath) as! SourcesCollectionViewCell
-            pressCell(cell: cell)
-            
-        default:
-            return
-        }
+extension HeaderView: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        tableView.bounds.height/3
     }
-    
-    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    //        CGSize(width: 150, height: height/3)
-    //    }
-    
 }
-

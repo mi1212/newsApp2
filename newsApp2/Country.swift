@@ -73,7 +73,7 @@ enum Country: String, CaseIterable {
         return result
     }
     
-    static var countryesArray: [Country] {
-        return Country.allCases.map { $0 }
+    static var countryesArray: [String] {
+        return Country.allCases.map { $0.rawValue }
       }
 }
