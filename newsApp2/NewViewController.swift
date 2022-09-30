@@ -133,9 +133,7 @@ class NewViewController: UIViewController {
         setupViewController()
         self.view.backgroundColor = .white
     }
-    
-    
-    
+ 
     private func setupViewController() {
         self.view.addSubview(scrollView)
         scrollView.addSubview(contentView)

@@ -21,7 +21,7 @@ class HeaderView: UIView {
     
     private lazy var blurView: UIView = {
         let view = UIView()
-        let blurEffect = UIBlurEffect(style: .extraLight)
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = view.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -34,15 +34,15 @@ class HeaderView: UIView {
         let table = UITableView()
         table.delegate = self
         table.dataSource = self
-        table.backgroundColor = .green
+        table.backgroundColor = .clear
         table.register(HeaderViewCell.self, forCellReuseIdentifier: "headercell")
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
     }()
         
-    let resultLabel: UILabel = {
+    static let resultLabel: UILabel = {
         let label = UILabel()
-        label.text = "result"
+        label.text = "result : "
         label.backgroundColor = .clear
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -51,10 +51,13 @@ class HeaderView: UIView {
     
     convenience init(width: CGFloat, height: CGFloat) {
         self.init()
+        self.backgroundColor = .clear
         self.width = width
         self.height = height
         setupHeader()
     }
+    
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -67,7 +70,7 @@ class HeaderView: UIView {
     private func setupHeader() {
         self.addSubview(blurView)
         self.addSubview(buttonTableView)
-        self.addSubview(resultLabel)
+        self.addSubview(HeaderView.resultLabel)
         
         NSLayoutConstraint.activate([
             blurView.topAnchor.constraint(equalTo: self.topAnchor),
@@ -80,15 +83,15 @@ class HeaderView: UIView {
             buttonTableView.topAnchor.constraint(equalTo: self.topAnchor),
             buttonTableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             buttonTableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            buttonTableView.bottomAnchor.constraint(equalTo: resultLabel.topAnchor)
+            buttonTableView.bottomAnchor.constraint(equalTo: HeaderView.resultLabel.topAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            resultLabel.topAnchor.constraint(equalTo: buttonTableView.bottomAnchor),
-            resultLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            resultLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            resultLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            resultLabel.heightAnchor.constraint(equalToConstant: height/4)
+            HeaderView.resultLabel.topAnchor.constraint(equalTo: buttonTableView.bottomAnchor),
+            HeaderView.resultLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            HeaderView.resultLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            HeaderView.resultLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            HeaderView.resultLabel.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
 }
@@ -129,6 +132,7 @@ extension HeaderView: UITableViewDelegate {
 extension HeaderView: HeaderViewCellDelegate {
     func chooseParam(section: Int, row: Int) {
         print("section \(section), row \(row)")
+        
         delegate?.chooseParam(section: section, row: row)
     }
 }

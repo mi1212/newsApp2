@@ -40,6 +40,7 @@ class NewsTableViewController: UITableViewController {
             newsArray = news
             newsCount = news.count
             totalResults = searchResults?.totalResults ?? 0
+            HeaderView.resultLabel.text = "result : " + "\(totalResults)"
             tableView.rowHeight = self.view.layer.bounds.height/6
             tableView.reloadData()
         }
@@ -59,6 +60,7 @@ class NewsTableViewController: UITableViewController {
             newsArray = news
             newsCount = news.count
             totalResults = searchResults?.totalResults ?? 0
+            HeaderView.resultLabel.text = "result : " + "\(totalResults)"
             tableView.rowHeight = self.view.layer.bounds.height/6
             tableView.reloadData()
         }
@@ -86,7 +88,7 @@ class NewsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsTableViewCell", for: indexPath) as! NewsTableViewCell
         cell.setupCell(result: newsArray[indexPath.row])
-        cell.photoImageView.layer.opacity = 1
+//        cell.photoImageView.layer.opacity = 1
         return cell
     }
     

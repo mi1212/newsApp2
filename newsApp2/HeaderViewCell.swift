@@ -30,6 +30,7 @@ class HeaderViewCell: UITableViewCell {
             let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
             collection.delegate = self
             collection.dataSource = self
+            collection.backgroundColor = .clear
             collection.register(SourcesCollectionViewCell.self, forCellWithReuseIdentifier: "SourseCell")
             collection.translatesAutoresizingMaskIntoConstraints = false
             return collection
@@ -49,6 +50,7 @@ class HeaderViewCell: UITableViewCell {
     
     private func setupCell() {
         contentView.addSubview(collectionView)
+        self.backgroundColor = .clear
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: contentView.topAnchor),

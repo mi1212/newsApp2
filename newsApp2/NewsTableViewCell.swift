@@ -15,7 +15,6 @@ class NewsTableViewCell: UITableViewCell {
     let photoImageView: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
-//        image.backgroundColor = .green
         image.layer.cornerRadius = 12
         image.clipsToBounds = true
         image.contentMode = .scaleAspectFill
@@ -31,6 +30,7 @@ class NewsTableViewCell: UITableViewCell {
                 return
             }
             photoImageView.sd_setImage(with: url)
+            photoImageView.layer.opacity = 1
         }
     }
     

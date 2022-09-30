@@ -35,12 +35,8 @@ class SourcesCollectionViewCell: UICollectionViewCell {
             label.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -5),
             label.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -5),
         ])
-        self.backgroundColor = .white
+        self.backgroundColor = .tertiarySystemFill
         self.layer.cornerRadius = 12
-        self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowOpacity = 0.3
-        self.layer.shadowOffset = .zero
-        self.layer.shadowRadius = 10
     }
     
 }
