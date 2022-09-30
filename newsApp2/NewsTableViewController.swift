@@ -19,11 +19,24 @@ class NewsTableViewController: UITableViewController {
     
     var totalResults = 0
     
+    private var timer: Timer?
+    
     var parametrs = [String: String]()
+    
+    var refresherControl:UIRefreshControl!
+    
+    private func setupRefresh() {
+        refresherControl = UIRefreshControl()
+        self.refresherControl?.tintColor = .black
+        self.tableView.alwaysBounceVertical = true
+        self.refresherControl?.addTarget(self, action: #selector(loadData), for: .valueChanged)
+        self.tableView.addSubview(refresherControl)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchNews()
+        setupRefresh()
         header.delegate = self
         self.tableView.register(NewsTableViewCell.self, forCellReuseIdentifier: "NewsTableViewCell")
     }
@@ -65,6 +78,22 @@ class NewsTableViewController: UITableViewController {
             tableView.reloadData()
         }
         
+    }
+    
+    @objc func loadData() {
+        if parametrs.isEmpty {
+            timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { [self] _ in
+                fetchNews()
+                tableView.reloadData()
+                refresherControl.endRefreshing()
+            })
+        } else {
+            timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { [self] _ in
+                fetchSourceNews(param: parametrs)
+                tableView.reloadData()
+                refresherControl.endRefreshing()
+            })
+        }
     }
     
     // MARK: - Table view data source
