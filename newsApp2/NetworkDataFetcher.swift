@@ -34,10 +34,10 @@ class NetworkDataFetcher {
                 print("Error received requesting data: \(error.localizedDescription )")
                 completion(nil)
             }
-                        
+            
             let decode = self.decodeJSON(type: SearchResults.self, from: data)
             
-        
+            
             completion(decode)
         }
     }
@@ -65,8 +65,10 @@ class NetworkDataFetcher {
             if let date = formatter.date(from: dateString) {
                 return date
             }
-            throw DecodingError.dataCorruptedError(in: container,
-                                                   debugDescription: "Cannot decode date string \(dateString)")
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Cannot decode date string \(dateString)"
+            )
         }
         
         guard let data = from else { return nil }
