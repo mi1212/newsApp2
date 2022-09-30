@@ -22,7 +22,7 @@ class NewsTableViewController: UITableViewController {
     private var timer: Timer?
     
     var parametrs = [String: String]()
-    
+    // обновление при скролле вниз
     var refresherControl:UIRefreshControl!
     
     private func setupRefresh() {
@@ -35,14 +35,14 @@ class NewsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchNews()
+        fetchNews(nextPage: false)
         setupRefresh()
         header.delegate = self
         self.tableView.register(NewsTableViewCell.self, forCellReuseIdentifier: "NewsTableViewCell")
     }
     
-    private func fetchNews() {
-        self.networkDataFetcher.fetchNews() { [self] (searchResults) in
+    private func fetchNews(nextPage: Bool) {
+        self.networkDataFetcher.fetchNews(nextPage: nextPage) { [self] (searchResults) in
             
             if searchResults?.status == "error" {
                 let text = searchResults?.message
@@ -50,18 +50,34 @@ class NewsTableViewController: UITableViewController {
             }
             
             guard let news = searchResults?.results else { return }
-            newsArray = news
-            newsCount = news.count
+            
             totalResults = searchResults?.totalResults ?? 0
+            
+            switch nextPage {
+            case true:
+                newsArray += news
+                newsCount += news.count
+                totalResults = (searchResults?.totalResults)!
+                print("\\case true  newsArray.count  - \(newsArray.count)")
+                
+            case false:
+                
+                newsArray = news
+                newsCount = news.count
+                totalResults = (searchResults?.totalResults)!
+                print("\\case false  newsArray.count  - \(newsArray.count)")
+            }
+            
             HeaderView.resultLabel.text = "result : " + "\(totalResults)"
+            
             tableView.rowHeight = self.view.layer.bounds.height/6
             tableView.reloadData()
         }
     }
     
-    private func fetchSourceNews(param: [String: String]) {
+    private func fetchSourceNews(nextPage: Bool, param: [String: String]) {
         
-        self.networkDataFetcher.fetchSourceNews(param: param) { [self] (searchResults) in
+        self.networkDataFetcher.fetchSourceNews(nextPage: nextPage, param: param) { [self] (searchResults) in
             
             if searchResults?.status == "error" {
                 let text = searchResults?.message
@@ -70,9 +86,25 @@ class NewsTableViewController: UITableViewController {
             
             guard let news = searchResults?.results else { return }
             
-            newsArray = news
-            newsCount = news.count
-            totalResults = searchResults?.totalResults ?? 0
+            switch nextPage {
+                
+            case true:
+                newsArray += news
+                newsCount += news.count
+                totalResults = (searchResults?.totalResults)!
+                
+                print("\\case true  newsArray.count  - \(newsArray.count)")
+                
+            case false:
+                
+                newsArray = news
+                newsCount = news.count
+                totalResults = (searchResults?.totalResults)!
+                
+                print("\\case false  newsArray.count  - \(newsArray.count)")
+            }
+            
+            print("totalResult \(totalResults)")
             HeaderView.resultLabel.text = "result : " + "\(totalResults)"
             tableView.rowHeight = self.view.layer.bounds.height/6
             tableView.reloadData()
@@ -83,13 +115,13 @@ class NewsTableViewController: UITableViewController {
     @objc func loadData() {
         if parametrs.isEmpty {
             timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { [self] _ in
-                fetchNews()
+                fetchNews(nextPage: false)
                 tableView.reloadData()
                 refresherControl.endRefreshing()
             })
         } else {
             timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { [self] _ in
-                fetchSourceNews(param: parametrs)
+                fetchSourceNews(nextPage: false, param: parametrs)
                 tableView.reloadData()
                 refresherControl.endRefreshing()
             })
@@ -117,7 +149,6 @@ class NewsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsTableViewCell", for: indexPath) as! NewsTableViewCell
         cell.setupCell(result: newsArray[indexPath.row])
-//        cell.photoImageView.layer.opacity = 1
         return cell
     }
     
@@ -126,6 +157,20 @@ class NewsTableViewController: UITableViewController {
         vc.setupViewController(result: newsArray[indexPath.row])
         self.present(vc, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if scrollView.isAtBottom {
+            if totalResults != newsArray.count {
+                if parametrs.isEmpty {
+                    fetchNews(nextPage: true)
+                } else {
+                    fetchSourceNews(nextPage: true, param: parametrs)
+                }
+            } else {
+                print("news was ended")
+            }
+        }
     }
 }
 
@@ -152,7 +197,7 @@ extension NewsTableViewController: HeaderViewDelegate {
             }
         }
         
-        fetchSourceNews(param: parametrs)
+        fetchSourceNews(nextPage: false, param: parametrs)
         
     }
 

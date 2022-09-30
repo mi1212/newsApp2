@@ -13,8 +13,8 @@ class NetworkDataFetcher {
     
     // запрос новостей
     
-    func fetchNews (completion: @escaping (SearchResults?) -> ()) {
-        networkService.request() { (data, error) in
+    func fetchNews (nextPage: Bool, completion: @escaping (SearchResults?) -> ()) {
+        networkService.request(nextPage: nextPage) { (data, error) in
             if let error = error {
                 print("Error received requesting data: \(error.localizedDescription )")
                 completion(nil)
@@ -27,8 +27,8 @@ class NetworkDataFetcher {
         }
     }
     
-    func fetchSourceNews (param: [String: String], completion: @escaping (SearchResults?) -> ()) {
-        networkService.requestSourceNews(param: param) { (data, error) in
+    func fetchSourceNews (nextPage: Bool, param: [String: String], completion: @escaping (SearchResults?) -> ()) {
+        networkService.requestSourceNews(nextPage: nextPage, param: param) { (data, error) in
             
             if let error = error {
                 print("Error received requesting data: \(error.localizedDescription )")

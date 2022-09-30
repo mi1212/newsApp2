@@ -9,12 +9,12 @@ import Foundation
 
 class NetworkService {
 
-    var page = 1
+    var page = 0
     
     //  построение запроса данных по URL
     
-    func request(completion: @escaping (Data?, Error?) -> Void) {
-        let parametrs = self.requestParametrs()
+    func request(nextPage: Bool, completion: @escaping (Data?, Error?) -> Void) {
+        let parametrs = self.requestWithoutParametrs(nextPage: nextPage)
         let url = self.url(params: parametrs)
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = prepareHeader()
@@ -34,10 +34,31 @@ class NetworkService {
     
     // параметры запроса
 
-    private func requestParametrs() -> [String: String] {
+    private func requestWithoutParametrs(nextPage: Bool) -> [String: String] {
         var parametrs = [String: String]()
-        parametrs["page"] = String(page)
-//        page += 1
+
+        switch nextPage {
+        case true:
+            page += 1
+            parametrs["page"] = String(page)
+        case false:
+            page = 0
+            parametrs["page"] = String(page)
+        }
+        return parametrs
+    }
+    
+    private func requestWithParametrs(nextPage: Bool, param: [String: String]) -> [String: String] {
+        var parametrs = param
+
+        switch nextPage {
+        case true:
+            page += 1
+            parametrs["page"] = String(page)
+        case false:
+            page = 0
+            parametrs["page"] = String(page)
+        }
         return parametrs
     }
     
@@ -54,11 +75,8 @@ class NetworkService {
     
     //
     
-    func requestSourceNews(param: [String:String],  completion: @escaping (Data?, Error?) -> Void) {
-        var parametrs = self.requestParametrs()
-
-            parametrs = param
-        
+    func requestSourceNews(nextPage: Bool, param: [String:String],  completion: @escaping (Data?, Error?) -> Void) {
+        var parametrs = self.requestWithParametrs(nextPage: nextPage, param: param)
         let url = self.url(params: parametrs)
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = prepareHeader()
