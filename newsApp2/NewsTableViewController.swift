@@ -196,7 +196,7 @@ extension NewsTableViewController: HeaderViewDelegate {
                 parametrs["language"] = nil
             }
         }
-        
+        tableView.setContentOffset(.zero, animated: true)
         fetchSourceNews(nextPage: false, param: parametrs)
         
     }
